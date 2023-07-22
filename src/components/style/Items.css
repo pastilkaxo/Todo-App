@@ -1,0 +1,12 @@
+.list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+button{
+    width: 2rem;
+    margin-right: 5px;
+}
+.list-item-task{
+    font-weight: bold;
+}
