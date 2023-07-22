@@ -8,5 +8,9 @@ button{
     margin-right: 5px;
 }
 .list-item-task{
+    cursor: pointer;
+}
+.list-item-task.important {
+    color: green;
     font-weight: bold;
 }
