@@ -5,14 +5,26 @@ import Header from "./Header"
 import Adder from "./Adder"
 
 export default class App extends Component{
+
+  maxId = 1;   // HOW !!!!!
+
  constructor(){
   super();
   this.state = {
     data : [
-      {task:"Crate App", important:true , id:1},
-      {task:"Chill", important:false, id:2},
-      {task:"Do sports", important:false,id:3},
+          this.createTodoItem('Create App'),
+          this.createTodoItem('Drink'),
+          this.createTodoItem('Eat'),
     ]
+  }
+ }
+
+ createTodoItem(task){
+  return{
+    task,
+    important:false,
+    done:false,
+    id:this.maxId++
   }
  }
 
@@ -30,31 +42,11 @@ export default class App extends Component{
   })
  }
 
- randomId =(min,max) => {
-  let rand = min + Math.random() * (max + 1 - min);
-  return Math.floor(rand);
- }
-
- generateUniqueId = (data) => {
-  let newId = this.randomId(1, 100);
-
-  while (data.some((item) => item.id === newId)) {
-    newId = this.randomId(1, 100);
-  }
-
-  return newId;
-};
-
-
-
-
- addItem = (text) => {
-     const newId = this.generateUniqueId(this.state.data);
-          
+ addItem = (text) => {          
      const newItem = {
       task:text,
       important:false,
-      id:newId
+      id:this.maxId++
      }
 
    this.setState(({data}) => {
@@ -64,20 +56,49 @@ export default class App extends Component{
               data:newArr
             }
    })
-   
-           
+    
+  }
 
-       
+  onToggleImportant = (id) => {
+    this.setState(({data}) => {
+      const idx = data.findIndex((el) => el.id === id)
+         const oldData = data[idx];
+         const newData = {...oldData, important: !oldData.important}
+         const newArray = [...data.slice(0,idx),newData,...data.slice(idx+1)];
+          
+         return{
+           data:newArray
+         }
+    })
 }
+
+  onToggleDone = (id) => {
+    this.setState(({data}) => {
+      const idx = data.findIndex((el) => el.id === id)
+         const oldData = data[idx];
+         const newData = {...oldData, done: !oldData.done}
+         const newArray = [...data.slice(0,idx),newData,...data.slice(idx+1)];
+          
+         return{
+           data:newArray
+         }
+    })
+ }
 
 
 render(){
+const {data} = this.state
+ const doneCount = data.filter((el)=>el.done).length;
+ const todoCount = data.length - doneCount;
+
     return(
         <div>
-            <Header todo={1} done={3}/>
+            <Header todo={todoCount} done={doneCount}/>
             <Search/>
-            <TodoList list={this.state.data}
+            <TodoList list={data}
             onDeleted={this.deletedItems}
+            onToggleImportant={this.onToggleImportant}
+            onToggleDone={this.onToggleDone}
             />
             <Adder onItemAdd={this.addItem}/>
         </div>
