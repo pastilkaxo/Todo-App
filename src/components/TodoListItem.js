@@ -29,7 +29,7 @@ constructor(){
     }
 
   render(){
-   const  {task} = this.props;
+   const  {task,onDeleted} = this.props;
    const {done,important} = this.state;
         let classNames = "list-item-task";
             if(done) {
@@ -51,7 +51,7 @@ constructor(){
     <i className="fa fa-exclamation" />
   </button>
 
-  <button type="button" className="btn btn-outline-danger btn-sm float-right">
+  <button type="button" className="btn btn-outline-danger btn-sm float-right" onClick={onDeleted}>
   &times;
   </button>
       </span>
