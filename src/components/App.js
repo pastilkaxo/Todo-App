@@ -3,6 +3,8 @@ import TodoList from "./TodoList"
 import Search from "./Search"
 import Header from "./Header"
 import Adder from "./Adder"
+import Filter from "./Filter";
+
 
 export default class App extends Component{
 
@@ -15,7 +17,9 @@ export default class App extends Component{
           this.createTodoItem('Create App'),
           this.createTodoItem('Drink'),
           this.createTodoItem('Eat'),
-    ]
+    ],
+    searchResult: '',
+    filter: 'all' 
   }
  }
 
@@ -85,17 +89,57 @@ export default class App extends Component{
     })
  }
 
+ search = (items ,searchResult) => {
+  if(searchResult.length === 0){
+    return items;
+  }
+
+     return items.filter((el) => {
+      return el.task.toLowerCase().indexOf(searchResult.toLowerCase()) > -1;
+     })
+ };
+  
+ onSearchChange = (searchResult) => {
+  this.setState({searchResult});
+ };
+
+filter = (items,filter) => {
+  switch(filter){
+    case 'all':
+      return items;
+    case 'active':
+      return items.filter((el)=>
+      !el.done
+    );
+    case 'done':
+      return items.filter((el)=>
+        el.done
+      );
+    default:
+      return items;
+  }
+}
+
+onFilter = (filter) =>{ 
+  this.setState({filter});
+}  
+
 
 render(){
-const {data} = this.state
+    const {data , searchResult , filter} = this.state;
+    const visibleItems = this.filter(this.search(data , searchResult),filter);
+
  const doneCount = data.filter((el)=>el.done).length;
  const todoCount = data.length - doneCount;
 
     return(
         <div>
             <Header todo={todoCount} done={doneCount}/>
-            <Search/>
-            <TodoList list={data}
+                <div className="d-flex">
+                <Search list={data} handleSearch={this.onSearchChange}/>
+                <Filter filter={filter}  onFilter = {this.onFilter}/>
+                </div>
+            <TodoList list={visibleItems}
             onDeleted={this.deletedItems}
             onToggleImportant={this.onToggleImportant}
             onToggleDone={this.onToggleDone}

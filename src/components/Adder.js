@@ -20,7 +20,7 @@ constructor(){
     const {task} = this.state
     this.props.onItemAdd(task)
     this.setState({
-        task:' '
+        task:''
     })
   }
 
@@ -29,7 +29,7 @@ constructor(){
              <form className="d-flex add-panel" onSubmit={this.onSubmit}>
                 <input class="form-control me-2"  value={this.state.task}
                 type="text" placeholder="Add item" onChange={this.onTaskChange}/>
-                <button className="btn btn-primary">Add</button>
+                <button className="btn btn-secondary">Add</button>
              </form>
         )
     }
